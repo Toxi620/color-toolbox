@@ -1,7 +1,7 @@
 name: 打包 macOS 版
 
 on:
-  workflow_dispatch:  # 手动触发
+  workflow_dispatch:
 
 jobs:
   build-mac:
@@ -22,21 +22,21 @@ jobs:
         run: |
           pyinstaller --onefile --console \
             --name "配色工具" \
-            --distpath dist \
-            --add-data "color_toolbox:color_toolbox" \
-            --workpath "color_toolbox/build/pyinstaller_main" \
-            --specpath "color_toolbox" \
-            "color_toolbox/main.py"
+            --distpath "$GITHUB_WORKSPACE/dist" \
+            --add-data "$GITHUB_WORKSPACE/color_toolbox:color_toolbox" \
+            --workpath "$GITHUB_WORKSPACE/color_toolbox/build/pyinstaller_main" \
+            --specpath "$GITHUB_WORKSPACE/color_toolbox" \
+            "$GITHUB_WORKSPACE/color_toolbox/main.py"
 
       - name: 打包（无 OPPO）
         run: |
           pyinstaller --onefile --console \
             --name "配色工具_无OPPO" \
-            --distpath dist \
-            --add-data "color_toolbox:color_toolbox" \
-            --workpath "color_toolbox/build/pyinstaller_no_oppo" \
-            --specpath "color_toolbox" \
-            "color_toolbox/main_no_oppo.py"
+            --distpath "$GITHUB_WORKSPACE/dist" \
+            --add-data "$GITHUB_WORKSPACE/color_toolbox:color_toolbox" \
+            --workpath "$GITHUB_WORKSPACE/color_toolbox/build/pyinstaller_no_oppo" \
+            --specpath "$GITHUB_WORKSPACE/color_toolbox" \
+            "$GITHUB_WORKSPACE/color_toolbox/main_no_oppo.py"
 
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
