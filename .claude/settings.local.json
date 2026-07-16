@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($files = @\\(\"double_powr_icon.png\",\"fast_powr_icon.png\",\"give_powr_icon.png\",\"低电量.png\",\"电池底.png\",\"框.png\",\"省电.png\",\"正常.png\"\\); foreach \\($f in $files\\) { $path = Join-Path \"d:\\\\test\\\\配色素材\\\\VIVO配色\\\\01vivo基础\" $f; if \\(Test-Path $path\\) { Write-Output \"FOUND: $path\" } else { Write-Output \"NOT FOUND: $path\" } })",
+      "Bash(python3)",
+      "Bash(pip show *)",
+      "Bash(pyinstaller --onefile --console --name \"配色工具\" --distpath . --workpath \"color_toolbox/build/pyinstaller_main\" --specpath \"color_toolbox\" \"color_toolbox/main.py\")",
+      "Bash(python -c ' *)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}
