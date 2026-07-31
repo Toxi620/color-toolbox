@@ -1191,8 +1191,8 @@ def process_section_7(base_dir):
             with Image.open(sp) as img: img.save(dp)
             print(f"  [07] 重命名: {s} → {d}")
 
-    # 12) USB图标改色 (排除白色) → (1025,525) 即控制中心颜色1
-    usb_color = get_color_from_reference(_ref_path(base_dir), 1025, 525)
+    # 12) USB图标改色 (排除白色) → (25,275)
+    usb_color = get_color_from_reference(_ref_path(base_dir), 25, 275)
     for fn in ["usb_selection_dialog_menu_charge_icon.png",
                "usb_selection_dialog_menu_file_icon.png",
                "usb_selection_dialog_menu_midi_icon.png",
@@ -1202,9 +1202,9 @@ def process_section_7(base_dir):
         if not os.path.exists(fp):
             print(f"  [07] 警告：USB文件不存在 '{fn}'"); continue
         with Image.open(fp) as img:
-            change_color_to_ref(img, _ref_path(base_dir), 1025, 525, exclude_white=True).save(fp)
+            change_color_to_ref(img, _ref_path(base_dir), 25, 275, exclude_white=True).save(fp)
         print(f"  [07] USB改色: {fn}")
-    # (1025,525) 不在 OPPO_COLOR_DEFS 中，直接使用 get_color_from_reference
+    # (25,275) 不在 OPPO_COLOR_DEFS 中，直接使用 get_color_from_reference
 
     print(f"  [07] 完成\n")
 
