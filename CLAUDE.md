@@ -22,14 +22,27 @@ echo "d:/test/配色素材" | python -m color_toolbox.main
 ## 打包命令（PyInstaller）
 
 ```bash
-# 带 OPPO 版本
+# Windows
 pyinstaller --onefile --console --name "配色工具" --distpath . --workpath "color_toolbox/build/pyinstaller_main" --specpath "color_toolbox" "color_toolbox/main.py"
 
 # 无 OPPO 版本
 pyinstaller --onefile --console --name "配色工具_无OPPO" --distpath . --workpath "color_toolbox/build/pyinstaller_no_oppo" --specpath "color_toolbox" "color_toolbox/main_no_oppo.py"
 ```
 
+### macOS 打包
+
 Mac 打包时 `--add-data` 用 `color_toolbox:color_toolbox`（Windows 用 `;` 分隔）。
+
+**推荐方式**：在 `color_toolbox/` 目录下双击 `build_mac.command`，会自动：
+1. 安装 PyInstaller（如未安装）
+2. 打包含 OPPO / 无 OPPO 两个版本
+3. 为每个版本创建 **`.app` bundle 包裹**（双击可直接运行，传给其他 Mac 也可用）
+4. 清理中间文件，最终产物：`配色工具.app` + `配色工具_无OPPO.app`
+
+```bash
+# 或手动打包 macOS 版（.app 需用 build_mac.command 自动创建）
+pyinstaller --onefile --console --name "配色工具" --distpath . --add-data "color_toolbox:color_toolbox" --workpath "color_toolbox/build/pyinstaller_main" --specpath "color_toolbox" "color_toolbox/main.py"
+```
 
 ## 项目架构
 
@@ -96,7 +109,7 @@ else:                                   → 默认 HLS（保留亮度）
 | 章节 | 目录 | 主要操作 |
 |------|------|---------|
 | 1 | 01+04设置图标-拨号盘 | 时间改色(不可用态)、气泡复制、箭头**50%**透明度、_selected→_normal **50%**透明度、拨号键 _normal→_pressed、49x72/49x125 裁剪 |
-| 2 | 01+04设置图标-拨号盘-14版本 | **自动扫描**所有 `_selected.png` → 50%透明度 → `_normal.png` |
+| 2 | 01+04设置图标-14版本 | **自动扫描**所有 `_selected.png` → 50%透明度 → `_normal.png`（mms 文件改为 `_unselected.png`） |
 | 3 | 02-点九色适配 | 全部改点九色（保留 .9.png 边框标记），特殊文件叠10%黑色遮罩 |
 | 4 | 03-高亮色适配 | 从02/01复制气泡、缩放（150x150/137x137 带九宫格）、改浅色/深色、透明度 |
 | 5 | 04-高亮色13版本 | 从03复制6个来电图→scale_proportional+204x204 居中 |
@@ -120,7 +133,7 @@ Section 4 中预定义了 2 组标准边框模式（150x150 会话气泡、137x1
 - **main_no_oppo.py 独立副本**：不含 OPPO 流程，但与 main.py 是独立副本（非 import 复用），两处需同步修改。
 - **dead code in engine.py**：`colorize_image_mapped`、`colorize_image_multiply`、`colorize_anchor_multiply`、`replace_color` 定义了但未被其他文件 import 调用。
 - **dead code in config.py**：`HUE_OVERLAY_ALPHA` 已不再用于处理逻辑（光圈色改为统一完整 HLS），保留仅供参考。
-- **OPPO 控制中心颜色3 与 不可用态同坐标**：二者都取 (25, 625)（控制中心颜色3 和旧版不可用态），不可用态已改为 (25, 1180)。
+- **OPPO 不可用态坐标**：Section 1 时间改色用的坐标已从 (25, 625) 修正为 (25, 1180)。(25, 625) 现在是控制中心颜色3，两者不同。
 - **Section 9 是先缩放后着色**：从 108×108 `_active` 源裁剪图案→1.05x 缩放(50%柔化)→再 colorize，质量优于先着色再缩放。
-- **Section 2 自动扫描**：自动匹配文件夹内所有 `_selected.png` 后缀文件，新增图片无需改代码。
+- **Section 2 自动扫描**：自动匹配文件夹内所有 `_selected.png` 后缀文件，新增图片无需改代码。`mms_ic_tab_` 开头的文件输出为 `_unselected.png`，其他文件输出为 `_normal.png`。
 - **FULL_COLOR_FILES 优先级最高**：独立于颜色组，在 HUE_OVERLAY_COLORS/FULL_COLOR_COLORS 之前判断。

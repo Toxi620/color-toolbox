@@ -412,7 +412,7 @@ def process_section_1(base_dir):
         with Image.open(sp) as img: img.save(dp)
         return True
 
-    # --- 时间改色：不可用态 (25,625) ---
+    # --- 时间改色：不可用态 (25,1180) ---
     time_list = ["hor_widget_preview.png", "ic_clock_widget_num_colon.png",
         "multi_vertical_preview.png", "one_plus_clock_widget_preview.png",
         "refresh_weather_info.png", "single_hor_widget_preview.png",
@@ -424,7 +424,7 @@ def process_section_1(base_dir):
             print(f"  [01] 警告：时间文件不存在 '{fn}'")
             continue
         with Image.open(fp) as img:
-            change_color_to_ref(img, ref, 25, 625).save(fp)
+            change_color_to_ref(img, ref, 25, 1180).save(fp)
         print(f"  [01] 时间改色: {fn}")
 
     # --- 气泡复制：coui_bottom_alert_dialog_bg.9.png → 5个 ---
@@ -459,8 +459,8 @@ def process_section_1(base_dir):
         ("pb_dr_dialer_selected.png", "pb_dr_dialer_normal.png"),
         ("pb_dr_star_selected.png", "pb_dr_star_normal.png"),
         ("pb_dr_voice_mail_selected.png", "pb_dr_voice_mail_normal.png"),
-        ("mms_ic_tab_message_selected.png", "mms_ic_tab_message_normal.png"),
-        ("mms_ic_tab_notification_selected.png", "mms_ic_tab_notification_normal.png"),
+        ("mms_ic_tab_message_selected.png", "mms_ic_tab_message_unselected.png"),
+        ("mms_ic_tab_notification_selected.png", "mms_ic_tab_notification_unselected.png"),
         ("mms_ic_tab_message_selected_16.png", "mms_ic_tab_message_normal_16.png"),
         ("mms_ic_tab_notification_selected_16.png", "mms_ic_tab_notification_normal_16.png"),
         ("pb_dr_business_selected_16.png", "pb_dr_business_normal_16.png"),
@@ -535,11 +535,11 @@ def process_section_1(base_dir):
 
 
 # ============================================================
-# 章节 (2) — 01+04设置图标-拨号盘-14版本
+# 章节 (2) — 01+04设置图标-14版本
 # ============================================================
 def process_section_2(base_dir):
     """自动扫描所有 _selected.png → 50%透明度 → _normal.png"""
-    folder = _oppo_path(base_dir, "01+04设置图标-拨号盘-14版本")
+    folder = _oppo_path(base_dir, "01+04设置图标-14版本")
     if not os.path.isdir(folder):
         print(f"  [02] 错误：目录不存在 '{folder}'"); return
 
@@ -547,7 +547,10 @@ def process_section_2(base_dir):
     for fn in sorted(os.listdir(folder)):
         if not fn.endswith("_selected.png"):
             continue
-        dst = fn.replace("_selected.png", "_normal.png")
+        if fn.startswith("mms_ic_tab_"):
+            dst = fn.replace("_selected.png", "_unselected.png")
+        else:
+            dst = fn.replace("_selected.png", "_normal.png")
         sp = os.path.join(folder, fn); dp = os.path.join(folder, dst)
         with Image.open(sp) as img:
             apply_opacity(img, 0.5).save(dp)
@@ -1413,7 +1416,7 @@ def process_oppo_tasks(base_dir):
     print()
     print("--- (1) 01+04设置图标-拨号盘 ---")
     process_section_1(base_dir)
-    print("--- (2) 01+04设置图标-拨号盘-14版本 ---")
+    print("--- (2) 01+04设置图标-14版本 ---")
     process_section_2(base_dir)
     print("--- (3) 02-点九色适配 ---")
     process_section_3(base_dir)
