@@ -164,6 +164,10 @@ OPACITY_80_TASKS = [
     ("VIVO配色/01vivo基础", "theme_bottom_collect_sel.png", "theme_bottom_collect_default.png"),
     ("VIVO配色/01vivo基础", "theme_bottom_contact_sel.png", "theme_bottom_contact_default.png"),
     ("VIVO配色/01vivo基础", "theme_bottom_dialer_sel.png", "theme_bottom_dialer_default.png"),
+]
+
+# ===== 60% 透明度复制+重命名任务（华为点九按压态） =====
+OPACITY_60_TASKS = [
     # ---- 华为配色 / 华为点九 (规则1: 追加 _press) ----
     ("华为配色/华为点九", "dial_num_0_blk.png", "dial_num_0_blk_press.png"),
     ("华为配色/华为点九", "dial_num_1_blk.png", "dial_num_1_blk_press.png"),

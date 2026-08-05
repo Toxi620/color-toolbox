@@ -6,7 +6,7 @@ from PIL import Image
 from color_toolbox.config import (
     COLOR_DEFS, FULL_COLOR_COLORS, HUE_OVERLAY_COLORS, POSSIBLE_SUBDIRS,
     TARGET_FILES, DUAL_COLORS, ANCHOR_THRESHOLD, ANCHOR_COLORS,
-    OPACITY_80_TASKS, OVERLAY_TASKS, COPY_RENAME_TASKS,
+    OPACITY_80_TASKS, OPACITY_60_TASKS, OVERLAY_TASKS, COPY_RENAME_TASKS,
     BATTERY_SOURCE_DIR, BATTERY_OUTPUT_DIR,
     BATTERY_TYPES, BATTERY_SLICE_SERIES, BATTERY_CHARGE_SERIES,
     BATTERY_ICON_TYPES, FULL_COLOR_FILES,
@@ -133,13 +133,12 @@ def process_anchor_colors(base_dir, base_subdir, ref_path):
     print()
 
 
-def process_opacity_tasks(base_dir):
-    """处理 80% 透明度 + 重命名任务 (OPACITY_80_TASKS)"""
-    print("\n=== 批量处理：80% 透明度 + 重命名 ===")
+def _run_opacity_batch(base_dir, tasks, opacity, label):
+    """批量处理透明度 + 重命名任务"""
     processed = 0
     skipped = 0
     errors = 0
-    for rel_dir, src_name, dst_name in OPACITY_80_TASKS:
+    for rel_dir, src_name, dst_name in tasks:
         src_path = os.path.join(base_dir, rel_dir, src_name)
         dst_path = os.path.join(base_dir, rel_dir, dst_name)
         if not os.path.exists(src_path):
@@ -149,13 +148,20 @@ def process_opacity_tasks(base_dir):
         try:
             print(f"  处理: {rel_dir}\\{src_name} → {dst_name}")
             with Image.open(src_path) as img:
-                result = apply_opacity(img, 0.8)
+                result = apply_opacity(img, opacity)
                 result.save(dst_path)
             processed += 1
         except Exception as e:
             print(f"  错误: {dst_name} - {e}")
             errors += 1
-    print(f"  完成: {processed} 已处理, {skipped} 已跳过, {errors} 错误\n")
+    print(f"  [{label}] 完成: {processed} 已处理, {skipped} 已跳过, {errors} 错误\n")
+
+
+def process_opacity_tasks(base_dir):
+    """处理透明度 + 重命名任务"""
+    print("\n=== 批量处理：透明度 + 重命名 ===")
+    _run_opacity_batch(base_dir, OPACITY_80_TASKS, 0.8, "80%透明度")
+    _run_opacity_batch(base_dir, OPACITY_60_TASKS, 0.6, "60%透明度")
 
 
 def process_overlay_tasks(base_dir):
